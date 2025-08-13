@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book CRUD Form</title>
+</head>
+<body>
+  <h1>Book CRUD</h1>
+
+  <h2>Create Book</h2>
+  <form id="createForm">
+    Name: <input type="text" id="createName" required>
+    Author: <input type="text" id="createAuthor" required>
+    <button type="submit">Create</button>
+  </form>
+  <div id="createResult"></div>
+
+  <h2>Get All Books</h2>
+  <button onclick="getAllBooks()">Fetch Books</button>
+  <pre id="booksList"></pre>
+
+  <h2>Get Book By ID</h2>
+  <input type="text" id="getId" placeholder="Book ID">
+  <button onclick="getBookById()">Fetch Book</button>
+  <pre id="bookById"></pre>
+
+  <h2>Update Book By ID</h2>
+  <form id="updateForm">
+    ID: <input type="text" id="updateId" required>
+    Name: <input type="text" id="updateName">
+    Author: <input type="text" id="updateAuthor">
+    <button type="submit">Update</button>
+  </form>
+  <div id="updateResult"></div>
+
+  <h2>Delete Book By ID</h2>
+  <input type="text" id="deleteId" placeholder="Book ID">
+  <button onclick="deleteBook()">Delete</button>
+  <div id="deleteResult"></div>
+
+  <script>
+    // CREATE
+    document.getElementById('createForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('createName').value;
+      const author = document.getElementById('createAuthor').value;
+      const res = await fetch('/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, author })
+      });
+      document.getElementById('createResult').innerText = await res.text();
+    };
+
+    // READ ALL
+    async function getAllBooks() {
+      const res = await fetch('/books');
+      document.getElementById('booksList').innerText = await res.text();
+    }
+
+    // READ ONE
+    async function getBookById() {
+      const id = document.getElementById('getId').value;
+      const res = await fetch('/books/' + id);
+      document.getElementById('bookById').innerText = await res.text();
+    }
+
+    // UPDATE
+    document.getElementById('updateForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('updateId').value;
+      const name = document.getElementById('updateName').value;
+      const author = document.getElementById('updateAuthor').value;
+      const body = {};
+      if (name) body.name = name;
+      if (author) body.author = author;
+      const res = await fetch('/books/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      document.getElementById('updateResult').innerText = await res.text();
+    };
+
+    // DELETE
+    async function deleteBook() {
+      const id = document.getElementById('deleteId').value;
+      const res = await fetch('/books/' + id, { method: 'DELETE' });
+      document.getElementById('deleteResult').innerText = await res.text();
+    }
+  </script>
+</body>
+</html>
