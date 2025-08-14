@@ -1,15 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Book CRUD Form</title>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #555;
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+    form, div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    label {
+      margin-top: 10px;
+    }
+    input {
+      padding: 8px;
+      margin: 5px 0;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: left;
+      display: block; /* Ensures each input takes a new line */
+    }
+    button {
+      padding: 8px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 200px; /* Match input width for consistency */
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    pre {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 80%;
+      max-width: 500px;
+      text-align: left;
+      margin-top: 10px;
+    }
+    #createResult, #updateResult, #deleteResult {
+      margin-top: 10px;
+      color: #d32f2f;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <h1>Book CRUD</h1>
 
   <h2>Create Book</h2>
   <form id="createForm">
-    Name: <input type="text" id="createName" required>
-    Author: <input type="text" id="createAuthor" required>
+    <label>Name:</label><input type="text" id="createName" required>
+    <label>Author:</label><input type="text" id="createAuthor" required>
+    <label>Imagelink:</label><input type="text" id="imageLink" required>
     <button type="submit">Create</button>
   </form>
   <div id="createResult"></div>
@@ -25,9 +95,10 @@
 
   <h2>Update Book By ID</h2>
   <form id="updateForm">
-    ID: <input type="text" id="updateId" required>
-    Name: <input type="text" id="updateName">
-    Author: <input type="text" id="updateAuthor">
+    <label>ID:</label><input type="text" id="updateId" required>
+    <label>Name:</label><input type="text" id="updateName">
+    <label>Author:</label><input type="text" id="updateAuthor">
+    <label>Imagelink:</label><input type="text" id="updateImagelink">
     <button type="submit">Update</button>
   </form>
   <div id="updateResult"></div>
@@ -37,56 +108,6 @@
   <button onclick="deleteBook()">Delete</button>
   <div id="deleteResult"></div>
 
-  <script>
-    // CREATE
-    document.getElementById('createForm').onsubmit = async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('createName').value;
-      const author = document.getElementById('createAuthor').value;
-      const res = await fetch('/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, author })
-      });
-      document.getElementById('createResult').innerText = await res.text();
-    };
-
-    // READ ALL
-    async function getAllBooks() {
-      const res = await fetch('/books');
-      document.getElementById('booksList').innerText = await res.text();
-    }
-
-    // READ ONE
-    async function getBookById() {
-      const id = document.getElementById('getId').value;
-      const res = await fetch('/books/' + id);
-      document.getElementById('bookById').innerText = await res.text();
-    }
-
-    // UPDATE
-    document.getElementById('updateForm').onsubmit = async function(e) {
-      e.preventDefault();
-      const id = document.getElementById('updateId').value;
-      const name = document.getElementById('updateName').value;
-      const author = document.getElementById('updateAuthor').value;
-      const body = {};
-      if (name) body.name = name;
-      if (author) body.author = author;
-      const res = await fetch('/books/' + id, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      document.getElementById('updateResult').innerText = await res.text();
-    };
-
-    // DELETE
-    async function deleteBook() {
-      const id = document.getElementById('deleteId').value;
-      const res = await fetch('/books/' + id, { method: 'DELETE' });
-      document.getElementById('deleteResult').innerText = await res.text();
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
